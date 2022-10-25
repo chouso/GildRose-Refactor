@@ -2,7 +2,7 @@ package com.gildedrose;
 
 import com.gildedrose.factory.ItemFactory;
 import com.gildedrose.model.Item;
-import com.gildedrose.model.Util;
+import com.gildedrose.util.Util;
 
 class GildedRose {
 

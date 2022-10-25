@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.gildedrose.factory.ItemFactory;
 import com.gildedrose.model.Item;
 
 public class GildedRoseTest {
@@ -28,7 +29,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBrieDec() {
-        GildedRose app = createGildedRose("Aged Brie", 0, 0);
+        GildedRose app = createGildedRose(ItemFactory.AGED_BRIE, 0, 0);
 
         app.updateQuality();
 
@@ -37,7 +38,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBackstagePassesItemDec() {
-        GildedRose app = createGildedRose("Backstage passes to a TAFKAL80ETC concert", 0, 0);
+        GildedRose app = createGildedRose(ItemFactory.BACKSTAGE_PASSES, 0, 0);
 
         app.updateQuality();
 
@@ -46,7 +47,7 @@ public class GildedRoseTest {
 
     @Test
     public void testSulfurasItemDoesNotDec() {
-        GildedRose app = createGildedRose("Sulfuras, Hand of Ragnaros", 0, 0);
+        GildedRose app = createGildedRose(ItemFactory.SULFURAS, 0, 0);
 
         app.updateQuality();
 
@@ -54,8 +55,17 @@ public class GildedRoseTest {
     }
 
     @Test
+    public void conjuredItemDecr() {
+        GildedRose app = createGildedRose(ItemFactory.CONJURED, 0, 0);
+
+        app.updateQuality();
+
+        assertEquals(-1, getSellIn(app));
+    }
+
+    @Test
     public void testBrieIncreasesInQualityEachTime() {
-        GildedRose app = createGildedRose("Aged Brie", 1, 1);
+        GildedRose app = createGildedRose(ItemFactory.AGED_BRIE, 1, 1);
 
         app.updateQuality();
 
@@ -64,7 +74,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBrieQualityCannotGoAboveFiftyWhenIncreasing() {
-        GildedRose app = createGildedRose("Aged Brie", 1, 49);
+        GildedRose app = createGildedRose(ItemFactory.AGED_BRIE, 1, 49);
 
         app.updateQuality();
         app.updateQuality();
@@ -74,7 +84,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBackstagePassesItemDecQualityByOneIfMoreThanElevenDays() {
-        GildedRose app = createGildedRose("Backstage passes to a TAFKAL80ETC concert", 12, 1);
+        GildedRose app = createGildedRose(ItemFactory.BACKSTAGE_PASSES, 12, 1);
 
         app.updateQuality();
 
@@ -83,7 +93,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBackstagePassesItemDecQualityByTwoIfLessThanElevenDays() {
-        GildedRose app = createGildedRose("Backstage passes to a TAFKAL80ETC concert", 10, 1);
+        GildedRose app = createGildedRose(ItemFactory.BACKSTAGE_PASSES, 10, 1);
 
         app.updateQuality();
 
@@ -92,7 +102,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBackstagePassesItemDecQualityByThreeIfLessThanSix() {
-        GildedRose app = createGildedRose("Backstage passes to a TAFKAL80ETC concert", 5, 1);
+        GildedRose app = createGildedRose(ItemFactory.BACKSTAGE_PASSES, 5, 1);
 
         app.updateQuality();
 
@@ -101,7 +111,7 @@ public class GildedRoseTest {
 
     @Test
     public void testBackstagePassesItemQualityDropsToZeroIfHasPassed() {
-        GildedRose app = createGildedRose("Backstage passes to a TAFKAL80ETC concert", 0, 50);
+        GildedRose app = createGildedRose(ItemFactory.BACKSTAGE_PASSES, 0, 50);
 
         app.updateQuality();
 
@@ -137,12 +147,39 @@ public class GildedRoseTest {
 
     @Test
     public void testNothingHappensToSulfurasItem() {
-        GildedRose app = createGildedRose("Sulfuras, Hand of Ragnaros", 1, 1);
+        GildedRose app = createGildedRose(ItemFactory.SULFURAS, 1, 1);
 
         app.updateQuality();
 
         assertEquals(1, getQuality(app));
         assertEquals(1, getSellIn(app));
+    }
+
+    @Test
+    public void conjuredItemDecreasesQualityByTwoIfSellByDayIsAboveZero() {
+        GildedRose app = createGildedRose(ItemFactory.CONJURED, 2, 5);
+
+        app.updateQuality();
+
+        assertEquals(3, getQuality(app));
+    }
+
+    @Test
+    public void conjuredItemDecreasesQualityByFourOnceSellByDayIsZeroOrLess() {
+        GildedRose app = createGildedRose(ItemFactory.CONJURED, 0, 5);
+
+        app.updateQuality();
+
+        assertEquals(1, getQuality(app));
+    }
+
+    @Test
+    public void conjuredItemCannotHaveQualityBelowZero() {
+        GildedRose app = createGildedRose(ItemFactory.CONJURED, 0, 0);
+
+        app.updateQuality();
+
+        assertEquals(0, getQuality(app));
     }
 
     private int getSellIn(GildedRose app) {
