@@ -1,21 +1,25 @@
 package com.gildedrose.model;
 
-public class BackstagePasses extends Item {
+public class BackstagePasses implements CustomItem {
 
-    public BackstagePasses(String name, int sellIn, int quality) {
-        super(name, sellIn, quality);
+    private Item item;
+
+    public BackstagePasses(Item item) {
+        this.item = item;
     }
 
+    @Override
     public void updateItemState() {
-        sellIn -= 1;
-        if (sellIn >= 11) {
-            quality += 1;
-        } else if (sellIn > 5) {
-            quality += 2;
-        } else if (sellIn > 0) {
-            quality += 3;
+        item.sellIn -= 1;
+        if (item.sellIn >= 11) {
+            item.quality += 1;
+        } else if (item.sellIn > 5) {
+            item.quality += 2;
+        } else if (item.sellIn > 0) {
+            item.quality += 3;
         } else {
-            quality = 0;
+            item.quality = 0;
         }
+
     }
 }

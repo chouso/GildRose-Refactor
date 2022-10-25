@@ -1,13 +1,17 @@
 package com.gildedrose.model;
 
-public class AgedBrie extends Item {
+public class AgedBrie implements CustomItem {
 
-    public AgedBrie(String name, int sellIn, int quality) {
-        super(name, sellIn, quality);
+    private Item item;
+
+    public AgedBrie(Item item) {
+        this.item = item;
     }
 
+    @Override
     public void updateItemState() {
-        sellIn -= 1;
-        quality += 1;
+        item.sellIn -= 1;
+        item.quality += 1;
+
     }
 }

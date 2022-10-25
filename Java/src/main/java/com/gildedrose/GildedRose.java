@@ -2,11 +2,11 @@ package com.gildedrose;
 
 import com.gildedrose.factory.ItemFactory;
 import com.gildedrose.model.Item;
+import com.gildedrose.model.Util;
 
 class GildedRose {
 
     private static final int MIN_QUALITY_VAL = 0;
-    private static final int MAX_QUALITY_VAL = 50;
     private final ItemFactory itemFactory;
     Item[] items;
 
@@ -16,28 +16,21 @@ class GildedRose {
     }
 
     public void updateQuality() {
-        customizeItems();
         for (Item item : items) {
-            item.updateItemState();
-            if (hasReachedMinValue(item.quality)) {
+            itemFactory.createItem(item).updateItemState();
+            if (hasReachedLowestQualityValue(item)) {
                 item.quality = MIN_QUALITY_VAL;
-            } else if (hasReachedMaxValue(item.quality)) {
-                item.quality = MAX_QUALITY_VAL;
+            } else if (hasReachedHighestQualityValue(item)) {
+                item.quality = Util.maxValue(item);
             }
         }
     }
 
-    private void customizeItems() {
-        for (Item item : items) {
-            items = new Item[] { itemFactory.createItem(item.name, item.sellIn, item.quality) };
-        }
+    private boolean hasReachedLowestQualityValue(Item item) {
+        return item.quality < MIN_QUALITY_VAL;
     }
 
-    private boolean hasReachedMinValue(int itemQuality) {
-        return itemQuality < MIN_QUALITY_VAL;
-    }
-
-    private boolean hasReachedMaxValue(int itemQuality) {
-        return itemQuality > MAX_QUALITY_VAL;
+    private boolean hasReachedHighestQualityValue(Item item) {
+        return item.quality > Util.maxValue(item);
     }
 }
