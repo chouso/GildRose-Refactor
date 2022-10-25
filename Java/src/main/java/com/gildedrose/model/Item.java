@@ -1,4 +1,4 @@
-package com.gildedrose;
+package com.gildedrose.model;
 
 public class Item {
 
@@ -18,4 +18,7 @@ public class Item {
    public String toString() {
         return this.name + ", " + this.sellIn + ", " + this.quality;
     }
+   
+   public void updateItemState() {
+   }
 }
